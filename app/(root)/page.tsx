@@ -12,13 +12,19 @@ import React from "react";
 const page = async () => {
   const user = await getCurrentUser();
 
+  if (!user?.id) {
+    throw new Error("User ID is not available");
+  }
+
   const [userInterviews, allInterview] = await Promise.all([
-    getInterviewsByUserId(user?.id!),
-    getLatestInterviews({ userId: user?.id! }),
+    getInterviewsByUserId(user.id),
+    getLatestInterviews({ userId: user.id }),
   ]);
 
-  const hasPastInterviews = userInterviews?.length! > 0;
-  const hasUpcomingInterviews = allInterview?.length! > 0;
+  const hasPastInterviews =
+    Array.isArray(userInterviews) && userInterviews.length > 0;
+  const hasUpcomingInterviews =
+    Array.isArray(allInterview) && allInterview.length > 0;
 
   return (
     <>

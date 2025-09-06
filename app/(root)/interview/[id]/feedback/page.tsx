@@ -16,9 +16,13 @@ const page = async ({ params }: RouteParams) => {
   const interview = await getInterviewById(id);
   if (!interview) redirect("/");
 
+  if (!user?.id) {
+    throw new Error("User ID is not defined.");
+  }
+
   const feedback = await getFeedbackByInterviewId({
     interviewId: id,
-    userId: user?.id!,
+    userId: user?.id,
   });
 
   console.log(feedback);
